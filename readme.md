@@ -12,16 +12,15 @@ This document outlines a production-grade microservices-based architecture for a
 
 **Responsibilities:**
 
-- User registration/login (email/Google OAuth)
+- User registration/login (email/phone with otp)
 - JWT-based auth
 - Profile and subscription tier management
 
 **Tools & Packages:**
 
 - `bcrypt`, `jsonwebtoken`
-- `PostgreSQL` via `prisma` or `pg`
+- `PostgreSQL` 'pg'
 - `Redis` for sessions/cache
-- `passport` for OAuth
 
 ---
 
@@ -162,6 +161,7 @@ This document outlines a production-grade microservices-based architecture for a
 ├── nginx/ # Reverse proxy
 ├── Makefile
 ├── README.md
+
 ```
 
 ---
