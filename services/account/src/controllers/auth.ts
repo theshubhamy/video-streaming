@@ -47,10 +47,16 @@ export const login = async (
         expiresIn: '24h',
       },
     );
+    const fingerprint = generateFingerprint(
+      req.ip,
+      req.headers['user-agent'] || '',
+    );
+
     const sessionData = {
       userId: existingUser.id,
       ip: req.ip,
       userAgent: req.headers['user-agent'],
+      fingerprint,
       createdAt: Date.now(),
     };
 
@@ -121,3 +127,6 @@ export const listSessions = async (req: Request, res: Response) => {
 
   res.status(200).json(sessions);
 };
+function generateFingerprint(ip: string | undefined, arg1: string) {
+  throw new Error('Function not implemented.');
+}
