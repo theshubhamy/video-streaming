@@ -14,7 +14,7 @@ const dbConfig = {
 const client = new Client(dbConfig);
 
 // Connect to the database
-export const connectDB = client
+const connectDB = client
   .connect()
   .then(() => {
     console.log('Connected to PostgreSQL database!');
@@ -22,3 +22,4 @@ export const connectDB = client
   .catch(err => {
     console.error('Error connecting to the database:', err);
   });
+export { client, connectDB };
