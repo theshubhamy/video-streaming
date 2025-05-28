@@ -2,14 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_TOKEN_SIGNING_KEY } from '../config/env';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user: {
-      userId: string;
-      sessionId: string;
-    };
-  }
-}
 export const authMiddleware = (
   req: Request,
   res: Response,

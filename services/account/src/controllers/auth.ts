@@ -8,6 +8,7 @@ import {
   JWT_TOKEN_SIGNING_KEY,
   REFRESH_JWT_TOKEN_SIGNING_KEY,
 } from '../config/env';
+import { generateFingerprint } from '../middlewere/fingerprint';
 
 export const login = async (
   req: Request,
@@ -23,14 +24,14 @@ export const login = async (
       existingUser = await findOneUser('phone', emailorPhone);
     }
     if (!existingUser) {
-      return res.status(404).json('User not found.');
+      res.status(404).json('User not found.');
     }
     let isVaidPassword = await bcrypt.compare(
       password,
       existingUser?.password_hash,
     );
     if (!isVaidPassword) {
-      return res.status(403).json('Invalid Credentials.');
+      res.status(403).json('Invalid Credentials.');
     }
     let sessionId = uuidv4();
     let accessToken = jwt.sign(
@@ -48,7 +49,7 @@ export const login = async (
       },
     );
     const fingerprint = generateFingerprint(
-      req.ip,
+      req.ip as string,
       req.headers['user-agent'] || '',
     );
 
@@ -65,7 +66,7 @@ export const login = async (
     });
     await redis.sAdd(`user-sessions:${existingUser.id}`, sessionId);
 
-    return res.status(200).json({ accessToken, refreshToken });
+    res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     next(error);
   }
@@ -79,12 +80,12 @@ export const register = async (
     const { email, phone, password } = req.body;
     const existingUser = await findOneUser('email', email);
     if (existingUser) {
-      return res.status(401).json('User Alredy exist.');
+      res.status(401).json('User Alredy exist.');
     }
     const hashedPassowrd = await bcrypt.hash(password, 10);
 
     await CreateUser({ email, phone, password_hash: hashedPassowrd });
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: 'Profile created successfully.',
     });
@@ -127,6 +128,3 @@ export const listSessions = async (req: Request, res: Response) => {
 
   res.status(200).json(sessions);
 };
-function generateFingerprint(ip: string | undefined, arg1: string) {
-  throw new Error('Function not implemented.');
-}

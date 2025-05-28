@@ -71,7 +71,7 @@ services:
     depends_on:
       - postgres
       - redis
-      - kafka
+      # - kafka
     ports:
       - '4001:4000'
     env_file:

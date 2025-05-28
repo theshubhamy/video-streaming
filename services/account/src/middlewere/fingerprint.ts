@@ -1,16 +1,8 @@
 import crypto from 'crypto';
-import { NextFunction } from 'express';
-import { redis } from '../config/redis';
+import { Request, Response, NextFunction } from 'express';
+import { v4 as uuidv } from 'uuid';
+import type { Socket } from 'net';
 // Extend Express Request with 'ip' and 'user'
-declare module 'express-serve-static-core' {
-  interface Request {
-    fingerprint?: {
-      ip: string;
-      userAgent: string;
-      deviceId: string;
-    };
-  }
-}
 
 export const generateFingerprint = (ip: string, userAgent: string) => {
   return crypto
@@ -18,21 +10,29 @@ export const generateFingerprint = (ip: string, userAgent: string) => {
     .update(ip + userAgent)
     .digest('hex');
 };
+
+// Helper function to safely get IP
+function getClientIp(req: Request): string {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string') {
+    return forwarded.split(',')[0].trim();
+  }
+  return (req.socket as Socket).remoteAddress || '';
+}
+
 export const fingerprintMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ): void => {
   try {
-    const ip =
-      req.headers['x-forwarded-for']?.toString().split(',')[0] ||
-      req.socket.remoteAddress ||
-      req.ip;
+    const ip = getClientIp(req);
+    const userAgent =
+      typeof req?.headers['user-agent'] === 'string'
+        ? req?.headers['user-agent']
+        : 'unknown';
 
-    const userAgent = req.headers['user-agent'] || 'unknown';
-
-    // Example: use sessionId or userId or fallback to generate a new one
-    const deviceId = req.user?.sessionId || uuidv4();
+    const deviceId = req?.user?.sessionId || uuidv();
 
     req.fingerprint = {
       ip,
@@ -42,8 +42,6 @@ export const fingerprintMiddleware = (
 
     next();
   } catch (error) {
-    console.error('Error in fingerprint middleware:', error);
-    res.sendStatus(500);
-    return;
+    next(error);
   }
 };
