@@ -77,14 +77,20 @@ export const register = async (
   next: NextFunction,
 ) => {
   try {
-    const { email, phone, password } = req.body;
+    const { name, email, phone, password } = req.body;
     const existingUser = await findOneUser('email', email);
     if (existingUser) {
       res.status(401).json('User Alredy exist.');
     }
     const hashedPassowrd = await bcrypt.hash(password, 10);
-
-    await CreateUser({ email, phone, password_hash: hashedPassowrd });
+    let userId = uuidv4();
+    await CreateUser({
+      id: userId,
+      name,
+      email,
+      phone,
+      password_hash: hashedPassowrd,
+    });
     res.status(201).json({
       success: true,
       message: 'Profile created successfully.',

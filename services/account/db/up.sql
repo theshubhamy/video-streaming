@@ -7,7 +7,8 @@ END $$;
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
-  id CHAR(27) PRIMARY KEY,
+  id TEXT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE,
   phone VARCHAR(20) UNIQUE,
   password_hash TEXT,
@@ -17,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Subscriptions table
 CREATE TABLE IF NOT EXISTS subscriptions (
-  id CHAR(27) PRIMARY KEY,
+  id TEXT PRIMARY KEY,
   user_id CHAR(27) REFERENCES users(id) ON DELETE CASCADE,
   tier subscription_tier_enum NOT NULL,
   started_at TIMESTAMPTZ DEFAULT now(),

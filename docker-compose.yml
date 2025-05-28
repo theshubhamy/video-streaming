@@ -1,15 +1,172 @@
 services:
-  # ----------- Common dependencies ------------
+  account-service:
+    build:
+      context: ./services/account
+      dockerfile: app.dockerfile
+    container_name: account-service
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - '4001:4000'
+    environment:
+      PORT: 4000
+      PG_HOST: postgres
+      PG_USER: pguser
+      PG_PASSWORD: pgpassword
+      PG_DATABASE: video_platform
+      PG_PORT: 5432
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+      JWT_TOKEN_SIGNING_KEY: your_jwt_secret_key
+      REFRESH_JWT_TOKEN_SIGNING_KEY: your_jwt_refresh_secret_key
+
+  upload-service:
+    build:
+      context: ./services/upload
+      dockerfile: app.dockerfile
+    container_name: upload-service
+    depends_on:
+      - redis
+      - kafka
+    ports:
+      - '4002:4000'
+    environment:
+      PORT: 4000
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  transcode-service:
+    build:
+      context: ./services/transcode
+      dockerfile: app.dockerfile
+    container_name: transcode-service
+    depends_on:
+      - redis
+      - kafka
+    ports:
+      - '4003:4000'
+    environment:
+      PORT: 4000
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  stream-service:
+    build:
+      context: ./services/stream
+      dockerfile: app.dockerfile
+    container_name: stream-service
+    depends_on:
+      - redis
+    ports:
+      - '4004:4000'
+    environment:
+      PORT: 4000
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  video-service:
+    build:
+      context: ./services/video
+      dockerfile: app.dockerfile
+    container_name: video-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    ports:
+      - '4005:4000'
+    environment:
+      PORT: 4000
+      PG_HOST: postgres
+      PG_USER: user
+      PG_PASSWORD: password
+      PG_DATABASE: video_platform
+      PG_PORT: 5432
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  notification-service:
+    build:
+      context: ./services/notification
+      dockerfile: app.dockerfile
+    container_name: notification-service
+    depends_on:
+      - kafka
+    ports:
+      - '4006:4000'
+    environment:
+      PORT: 4000
+
+  analytics-service:
+    build:
+      context: ./services/analytics
+      dockerfile: app.dockerfile
+    container_name: analytics-service
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - '4007:4000'
+    environment:
+      PORT: 4000
+      PG_HOST: postgres
+      PG_USER: user
+      PG_PASSWORD: password
+      PG_DATABASE: video_platform
+      PG_PORT: 5432
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  search-service:
+    build:
+      context: ./services/search
+      dockerfile: app.dockerfile
+    container_name: search-service
+    depends_on:
+      - elasticsearch
+      - kafka
+      - redis
+    ports:
+      - '4008:4000'
+    environment:
+      PORT: 4000
+      PG_HOST: postgres
+      PG_USER: user
+      PG_PASSWORD: password
+      PG_DATABASE: video_platform
+      PG_PORT: 5432
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  graphql-gateway:
+    build:
+      context: ./graphql
+      dockerfile: app.dockerfile
+    container_name: graphql-gateway
+    depends_on:
+      - account-service
+      - upload-service
+      - transcode-service
+      - stream-service
+      - video-service
+      - notification-service
+      - analytics-service
+      - search-service
+    ports:
+      - '4000:4000'
+    environment:
+      PORT: 4000
+      PG_HOST: postgres
+      PG_USER: user
+      PG_PASSWORD: password
+      PG_DATABASE: video_platform
+      PG_PORT: 5432
+      REDIS_URL: redis://default:redispassword@redis:6379/0
+
+  # Account DB (PostgreSQL)
   postgres:
-    image: postgres:15
-    container_name: postgres
-    restart: always
+    build:
+      context: ./services/account/db
+      dockerfile: db.dockerfile
     environment:
       POSTGRES_DB: video_platform
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpassword
+    restart: unless-stopped
     ports:
       - '5432:5432'
 
@@ -17,6 +174,7 @@ services:
     image: redis:7-alpine
     container_name: redis
     restart: always
+    command: redis-server --requirepass redispassword
     ports:
       - '6379:6379'
 
@@ -55,138 +213,10 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
     ports:
       - '9200:9200'
       - '9300:9300'
 
-  # ----------- Microservices ------------
-
-  account-service:
-    build:
-      context: ./services/account
-      dockerfile: app.dockerfile
-    container_name: account-service
-    depends_on:
-      - postgres
-      - redis
-      # - kafka
-    ports:
-      - '4001:4000'
-    env_file:
-      - ./services/account/.env
-
-  upload-service:
-    build:
-      context: ./services/upload
-      dockerfile: app.dockerfile
-    container_name: upload-service
-    depends_on:
-      - redis
-      - kafka
-    ports:
-      - '4002:4000'
-    env_file:
-      - ./services/upload/.env
-
-  transcode-service:
-    build:
-      context: ./services/transcode
-      dockerfile: app.dockerfile
-    container_name: transcode-service
-    depends_on:
-      - redis
-      - kafka
-    ports:
-      - '4003:4000'
-    env_file:
-      - ./services/transcode/.env
-
-  stream-service:
-    build:
-      context: ./services/stream
-      dockerfile: app.dockerfile
-    container_name: stream-service
-    depends_on:
-      - redis
-    ports:
-      - '4004:4000'
-    env_file:
-      - ./services/stream/.env
-
-  video-service:
-    build:
-      context: ./services/video
-      dockerfile: app.dockerfile
-    container_name: video-service
-    depends_on:
-      - postgres
-      - redis
-      - kafka
-    ports:
-      - '4005:4000'
-    env_file:
-      - ./services/video/.env
-
-  notification-service:
-    build:
-      context: ./services/notification
-      dockerfile: app.dockerfile
-    container_name: notification-service
-    depends_on:
-      - kafka
-    ports:
-      - '4006:4000'
-    env_file:
-      - ./services/notification/.env
-
-  analytics-service:
-    build:
-      context: ./services/analytics
-      dockerfile: app.dockerfile
-    container_name: analytics-service
-    depends_on:
-      - postgres
-      - redis
-    ports:
-      - '4007:4000'
-    env_file:
-      - ./services/analytics/.env
-
-  search-service:
-    build:
-      context: ./services/search
-      dockerfile: app.dockerfile
-    container_name: search-service
-    depends_on:
-      - elasticsearch
-      - kafka
-      - redis
-    ports:
-      - '4008:4000'
-    env_file:
-      - ./services/search/.env
-
-  graphql-gateway:
-    build:
-      context: ./graphql
-      dockerfile: app.dockerfile
-    container_name: graphql-gateway
-    depends_on:
-      - account-service
-      - upload-service
-      - transcode-service
-      - stream-service
-      - video-service
-      - notification-service
-      - analytics-service
-      - search-service
-    ports:
-      - '4000:4000'
-    env_file:
-      - ./graphql/.env
-
-volumes:
-  postgres_data:
-  esdata:
+networks:
+  default:
+    name: videostreaming-net

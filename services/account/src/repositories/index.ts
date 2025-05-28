@@ -1,6 +1,8 @@
 import { client } from '../config/db';
 
 interface User {
+  id: string;
+  name: string;
   email: String;
   phone: String;
   password_hash: String;
@@ -22,8 +24,14 @@ export const findOneUser = async (key: string, value: string) => {
 };
 export const CreateUser = async (user: User) => {
   const queryText =
-    'INSERT INTO users(email,phone,password_hash) VALUES($1,$2,$3) RETURNING *';
-  const values = [user.email, user.phone, user.password_hash];
+    'INSERT INTO users(id,name, email,phone,password_hash) VALUES($1,$2,$3,$4,$5) RETURNING *';
+  const values = [
+    user.id,
+    user.name,
+    user.email,
+    user.phone,
+    user.password_hash,
+  ];
   let res = await client.query(queryText, values);
   return res;
 };
