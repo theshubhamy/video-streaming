@@ -3,9 +3,15 @@ import { client } from '../config/db';
 interface User {
   id: string;
   name: string;
-  email: String;
-  phone: String;
-  password_hash: String;
+  email: string;
+  phone: string;
+  password_hash: string;
+}
+interface Subscription {
+  id: string;
+  userId: string;
+  tier: string;
+  ended_at: string | null;
 }
 export const findUsers = async () => {
   let res = await client.query('SELECT * FROM users');
@@ -32,6 +38,14 @@ export const CreateUser = async (user: User) => {
     user.phone,
     user.password_hash,
   ];
+  let res = await client.query(queryText, values);
+  return res;
+};
+
+export const CreateSubscription = async (item: Subscription) => {
+  const queryText =
+    'INSERT INTO users(id,user_id, tier,ended_at) VALUES($1,$2,$3,$4) RETURNING *';
+  const values = [item.id, item.userId, item.tier, item.ended_at];
   let res = await client.query(queryText, values);
   return res;
 };

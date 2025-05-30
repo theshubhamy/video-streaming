@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { CreateUser, findOneUser } from '../repositories';
+import { CreateSubscription, CreateUser, findOneUser } from '../repositories';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
@@ -90,6 +90,13 @@ export const register = async (
       email,
       phone,
       password_hash: hashedPassowrd,
+    });
+    let sId = uuidv4();
+    await CreateSubscription({
+      id: sId,
+      userId,
+      tier: 'free',
+      ended_at: null,
     });
     res.status(201).json({
       success: true,
