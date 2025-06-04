@@ -34,7 +34,7 @@ This document outlines a production-grade microservices-based architecture for a
 
 **Tools & Packages:**
 
-- `multer`, `tus-node-server` (optional for resumable)
+- `multer`, (for resumable)
 - `AWS S3`, `MinIO`, `Backblaze`
 - `BullMQ` + `Redis` for job queue
 

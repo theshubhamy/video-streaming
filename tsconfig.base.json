@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "auth/*": ["shared/auth/*"],
+      "queue/*": ["shared/queue/*"],
+      "s3/*": ["shared/s3/*"],
+      "kafka/*": ["shared/kafka/*"]
+    },
+    "module": "commonjs",
+    "target": "es6",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules", "dist"]
+}
