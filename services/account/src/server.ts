@@ -1,11 +1,6 @@
 import 'dotenv/config';
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
-import rateLimit from 'express-rate-limit';
 import { PORT } from './config/env';
 import { connectDB } from './config/db';
 import { connectRedis } from './config/redis';
@@ -26,17 +21,7 @@ declare module 'express-serve-static-core' {
 
 const server: Application = express();
 server.disable('x-powered-by');
-server.use(helmet());
-server.use(compression());
-server.use(cookieParser());
-server.use(morgan('dev'));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests, please try again later.',
-});
-server.use(limiter);
 server.use(cors());
 // fingerprint middleware
 server.use(fingerprintMiddleware);

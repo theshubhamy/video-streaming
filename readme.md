@@ -272,7 +272,6 @@ notification-service → Email/SMS update to user
 
 ## 📍 Future Enhancements
 
-- Migrate BullMQ to Kafka for massive scale
 - Add WebRTC live streaming support
 - Usage-based billing (minutes watched)
 - AI-based thumbnail suggestions

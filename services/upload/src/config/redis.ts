@@ -3,7 +3,6 @@ import { REDIS_URL } from './env';
 const redis = createClient({
   url: REDIS_URL,
 });
-
 console.log(`Connecting to Redis at ${REDIS_URL}`);
 
 redis.on('error', err => console.error('Redis error:', err));
