@@ -60,7 +60,7 @@ Client
 
 - `multer`,(optional for resumable)
 - `AWS S3`
-- `kakfka` + `Redis` for job queue
+- `kafka` + `Redis` for job queue
 
 ---
 
