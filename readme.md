@@ -6,7 +6,7 @@ This document outlines a production-grade microservices-based architecture for a
 
 ---
 
-## Data FLOW
+## Data Flow
 
 ```
 Client
