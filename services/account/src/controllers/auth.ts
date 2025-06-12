@@ -8,7 +8,7 @@ import {
   JWT_TOKEN_SIGNING_KEY,
   REFRESH_JWT_TOKEN_SIGNING_KEY,
 } from '../config/env';
-import { generateFingerprint } from '../middlewere/fingerprint';
+import { generateFingerprint } from '../middleware/fingerprint';
 
 export const login = async (
   req: Request,

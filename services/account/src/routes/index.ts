@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { authMiddleware } from '../middlewere/auth';
+import { authMiddleware } from '../middleware/auth';
 import {
   listSessions,
   login,

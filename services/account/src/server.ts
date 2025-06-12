@@ -5,8 +5,8 @@ import { PORT } from './config/env';
 import { connectDB } from './config/db';
 import { connectRedis } from './config/redis';
 import accountRoutes from './routes/index';
-import { fingerprintMiddleware } from './middlewere/fingerprint';
-import { centralErrorHandler } from './middlewere/errorHandler';
+import { fingerprintMiddleware } from './middleware/fingerprint';
+import { centralErrorHandler } from './middleware/errorHandler';
 
 declare module 'express-serve-static-core' {
   interface Request {

@@ -6,6 +6,30 @@ This document outlines a production-grade microservices-based architecture for a
 
 ---
 
+## Data FLOW
+
+```
+Client
+  ↓
+[Upload Service]
+  - Receives chunked file
+  - Stores to S3
+  - Publishes Kafka job → topic: transcode-jobs
+          ↓
+    [Transcode Service]
+      - Subscribes to Kafka
+      - Fetches video from S3
+      - Runs FFmpeg
+      - Stores variants (e.g., 1080p, 720p) back to S3
+      - Notifies system (e.g., Kafka, DB, webhook)
+
+          ↓
+    [Video Service]
+      - Updates metadata (status = success/failed)
+      - Prepares for streaming
+
+```
+
 ## 📂 Microservices & Their Responsibilities
 
 ### 1. `user-service`
@@ -34,9 +58,9 @@ This document outlines a production-grade microservices-based architecture for a
 
 **Tools & Packages:**
 
-- `multer`, `tus-node-server` (optional for resumable)
-- `AWS S3`, `MinIO`, `Backblaze`
-- `BullMQ` + `Redis` for job queue
+- `multer`,(optional for resumable)
+- `AWS S3`
+- `kakfka` + `Redis` for job queue
 
 ---
 
