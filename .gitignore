@@ -1,6 +1,7 @@
 # Global node modules and build artifacts
 node_modules/
 dist/
+temp-files/
 .env
 .env.*.local
 *.log

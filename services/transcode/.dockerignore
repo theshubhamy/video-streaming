@@ -5,7 +5,6 @@ node_modules
 # Ignore build output - we'll build it in Docker
 
 dist
-temp-files
 
 # Ignore logs
 

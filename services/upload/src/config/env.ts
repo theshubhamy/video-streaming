@@ -11,8 +11,8 @@ export const ALLOWED_FILE_TYPES = (
 export const REDIS_URL =
   process.env.REDIS_URL || 'redis://default:redispassword@redis:6379/0';
 
-export const S3_ENDPOINT = process.env.S3_ENDPOINT;
 export const S3_ACCESS_KEY = process.env.S3_ACCESS_KEY;
 export const S3_SECRET_KEY = process.env.S3_SECRET_KEY;
 export const S3_REGION = process.env.S3_REGION;
 export const S3_BUCKET = process.env.S3_BUCKET;
+export const KAFKA_BROKER = process.env.KAFKA_BROKER;
