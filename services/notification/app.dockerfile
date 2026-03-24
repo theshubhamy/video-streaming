@@ -12,7 +12,5 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install --omit=dev
 COPY --from=builder /usr/src/app/dist ./dist
-# We might need to copy schema.graphql if we don't inline it or compile it into JS, but we will use gql tag in JS or copy it
-COPY schema.graphql ./
 EXPOSE 4000
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/server.js"]

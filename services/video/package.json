@@ -1,0 +1,27 @@
+{
+  "name": "video",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+  },
+  "dependencies": {
+    "express": "*",
+    "cors": "*",
+    "dotenv": "*",
+    "pg": "*",
+    "redis": "*",
+    "kafkajs": "*"
+  },
+  "devDependencies": {
+    "typescript": "*",
+    "@types/node": "*",
+    "@types/express": "*",
+    "@types/cors": "*",
+    "ts-node-dev": "*",
+    "@types/pg": "*"
+  },
+  "type": "commonjs"
+}

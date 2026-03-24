@@ -1,0 +1,15 @@
+type Query {
+  "Health check for the GraphQL API Gateway"
+  gatewayHealth: String!
+  
+  "Proxy health check to Video Service"
+  videoServiceHealth: String!
+  
+  "Proxy health check to Account Service"
+  accountServiceHealth: String!
+}
+
+type Mutation {
+  "Placeholder for future mutations"
+  _placeholder: String
+}
