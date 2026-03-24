@@ -21,8 +21,18 @@ client.on('error', (err, client) => {
 const connectDB = async () =>
   await client
     .connect()
-    .then(() => {
+    .then(async () => {
       console.log('Connected to PostgreSQL database!');
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password_hash TEXT NOT NULL,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+      console.log('Users table initialized.');
     })
     .catch(err => {
       console.error('Error connecting PostgreSQL:', err);

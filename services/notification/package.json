@@ -8,19 +8,20 @@
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts"
   },
   "dependencies": {
-    "express": "*",
+    "@video-streaming/shared": "file:../../shared",
     "cors": "*",
     "dotenv": "*",
+    "express": "*",
     "kafkajs": "*",
     "nodemailer": "*"
   },
   "devDependencies": {
-    "typescript": "*",
-    "@types/node": "*",
-    "@types/express": "*",
     "@types/cors": "*",
+    "@types/express": "*",
+    "@types/node": "*",
+    "@types/nodemailer": "*",
     "ts-node-dev": "*",
-    "@types/nodemailer": "*"
+    "typescript": "*"
   },
   "type": "commonjs"
 }

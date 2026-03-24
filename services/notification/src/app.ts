@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import { processEmailQueue } from './jobs/email.job';
 
 const app: Application = express();
 app.disable('x-powered-by');
@@ -15,6 +16,13 @@ app.get('/v1/health', (req: Request, res: Response) => {
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-    console.log(`✅ notification running on http://localhost:${PORT}`);
-});
+(async () => {
+  try {
+    await processEmailQueue();
+    app.listen(PORT, () => {
+      console.log(`✅ notification service running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start notification service:', err);
+  }
+})();
