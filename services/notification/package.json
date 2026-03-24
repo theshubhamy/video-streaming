@@ -1,11 +1,11 @@
 {
   "name": "notification",
   "version": "1.0.0",
-  "main": "dist/server.js",
+  "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts"
   },
   "dependencies": {
     "express": "*",

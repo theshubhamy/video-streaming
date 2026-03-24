@@ -1,13 +1,13 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import { startConsumer } from './consumer';
+import { startConsumer } from './jobs/consumer';
 const server: Application = express();
 let PORT = 4000;
 
 server.disable('x-powered-by');
 server.use(cors());
 
-server.get('/v1/health', (req, res) => {
+server.get('/v1/health', (req: Request, res: Response) => {
   res.status(200).send('Server is running ... ');
 });
 server.use(express.urlencoded({ extended: true, limit: '1mb' }));
